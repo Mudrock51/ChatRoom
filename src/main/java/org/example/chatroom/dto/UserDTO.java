@@ -5,6 +5,7 @@ import org.example.chatroom.mapper.User;
 public class UserDTO {
     private Long userId;
     private String username;
+    private transient String password; // 防止序列号
     private String email;
     private String avatarUrl;
     private User.Status status;
@@ -23,6 +24,14 @@ public class UserDTO {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getEmail() {

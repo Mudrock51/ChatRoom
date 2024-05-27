@@ -6,11 +6,13 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.sql.Timestamp;
 
+import static com.baomidou.mybatisplus.annotation.IdType.AUTO;
+
 
 @TableName("user")
 public class User {
 
-    @TableId(value = "user_id", type = IdType.AUTO)
+    @TableId(value = "user_id", type = AUTO)
     private Long userId;
 
     private String username;
@@ -50,7 +52,7 @@ public class User {
         }
     }
 
-    public long getUserId() {
+    public Long getUserId() {
         return userId;
     }
 

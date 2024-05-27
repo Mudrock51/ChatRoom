@@ -24,8 +24,13 @@ public class UserServiceImpl implements UserService {
         } else if (userMapper.selectByEmail(userDto.getEmail()).isPresent()) {
             throw new RuntimeException("Email already registered");
         }
+
         User user = UserConverter.convertUser(userDto);
+        user.setPassword(userDto.getPassword());
         user.setStatus(User.Status.OFFLINE);
+
+        userDto.setPassword(null);
+
         userMapper.insert(user);
         return UserConverter.convertUser(user);
     }
