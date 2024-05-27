@@ -1,6 +1,5 @@
 package org.example.chatroom.controller;
 
-import org.example.chatroom.Response;
 import org.example.chatroom.dto.UserDTO;
 import org.example.chatroom.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +14,12 @@ import java.util.Map;
 @RequestMapping("/api/user")
 public class UserController {
 
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     /*注册接口*/
     @PostMapping("/register")

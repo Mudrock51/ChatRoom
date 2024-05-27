@@ -1,6 +1,6 @@
 package org.example.chatroom.dto;
 
-import org.example.chatroom.dao.User;
+import org.example.chatroom.mapper.User;
 
 public class UserDTO {
     private Long userId;

@@ -1,48 +1,53 @@
-package org.example.chatroom.dao;
+package org.example.chatroom.mapper;
 
-import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
+import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.sql.Timestamp;
 
 
-@Entity
-@Table(name = "user")
+@TableName("user")
 public class User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="user_id")
-    private long userId;
+    @TableId(value = "user_id", type = IdType.AUTO)
+    private Long userId;
 
-    @Column(name="username", unique = true, nullable = false)
     private String username;
-
-    @Column(name="password", nullable = false)
-    private String password;
-
-    @Column(name = "email", nullable = false, unique = true)
     private String email;
-
-    @Column(nullable = false, updatable = false, name="created_at")
-    @CreationTimestamp
+    private String password;
+    private String avatarUrl;
+    private Timestamp lastLogin;
     private Timestamp createdAt;
 
-    @Column(nullable = false, name="last_login")
-    @UpdateTimestamp
-    private Timestamp lastLogin;
-
-    @Column(name="avatar_url")
-    private String avatarUrl;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status")
+    @TableField("status")
     private Status status;
 
     public enum Status {
-        ONLINE, OFFLINE
+        ONLINE("online"),
+        OFFLINE("offline");
+
+        @EnumValue
+        private final String code;
+
+        Status(String code) {
+            this.code = code;
+        }
+
+        @JsonValue
+        public String getCode() {
+            return code;
+        }
+
+        @JsonCreator
+        public static Status fromCode(String code) {
+            for (Status status : values()) {
+                if (status.code.equalsIgnoreCase(code)) {
+                    return status;
+                }
+            }
+            throw new IllegalArgumentException("Unknown status: " + code);
+        }
     }
 
     public long getUserId() {
