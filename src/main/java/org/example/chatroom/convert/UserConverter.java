@@ -1,6 +1,6 @@
 package org.example.chatroom.convert;
 
-import org.example.chatroom.mapper.User;
+import org.example.chatroom.entity.User;
 import org.example.chatroom.dto.UserDTO;
 
 public class UserConverter {

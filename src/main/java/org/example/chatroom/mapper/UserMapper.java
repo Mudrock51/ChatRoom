@@ -3,6 +3,7 @@ package org.example.chatroom.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.example.chatroom.entity.User;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;

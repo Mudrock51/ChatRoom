@@ -21,20 +21,58 @@ public class UserController {
         this.userService = userService;
     }
 
-    /*注册接口*/
     @PostMapping("/register")
     public ResponseEntity<UserDTO> register(@RequestBody UserDTO userDTO) {
-        UserDTO registeredUser = userService.register(userDTO);
+        UserDTO registeredUser = userService.registerUser(userDTO);
         return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
     }
 
-    /*登录接口*/
     @PostMapping("/login")
     public ResponseEntity<UserDTO> login(@RequestBody Map<String, String> credentials) {
         String username = credentials.get("username");
         String password = credentials.get("password");
-        System.out.println("username: " + username + " password: " + password);
-        UserDTO loggedInUser = userService.login(username, password);
+        UserDTO loggedInUser = userService.loginUser(username, password);
         return new ResponseEntity<>(loggedInUser, HttpStatus.OK);
+    }
+
+    @PostMapping("/forgetPassword")
+    public ResponseEntity<?> forgetPassword(@RequestBody Map<String, String> request) {
+        String action = request.get("action");
+        String email = request.get("email");
+
+        if (action == null || email == null) {
+            return ResponseEntity.badRequest().body("Action and email are required");
+        }
+
+        try {
+            switch (action) {
+                case "sendEmail":
+                    return userService.handleSendEmail(email);
+                case "verifyCode":
+                    String code = request.get("code");
+                    if (code == null) {
+                        return ResponseEntity.badRequest().body("Code is required for verification");
+                    }
+                    return userService.handleVerifyCode(email, code);
+                default:
+                    return ResponseEntity.badRequest().body("Invalid action");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/sendVerificationCode")
+    public ResponseEntity<?> sendVerificationCode(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+         return userService.handleSendEmail(email);
+    }
+
+    @PostMapping("/resetPassword")
+    public ResponseEntity<UserDTO> resetPassword(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        String newPassword = request.get("newPassword");
+        UserDTO resetUser = userService.resetPassword(email, newPassword);
+        return new ResponseEntity<>(resetUser, HttpStatus.OK);
     }
 }

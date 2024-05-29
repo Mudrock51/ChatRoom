@@ -1,4 +1,4 @@
-package org.example.chatroom.mapper;
+package org.example.chatroom.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonCreator;
