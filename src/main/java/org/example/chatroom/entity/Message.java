@@ -1,6 +1,7 @@
 package org.example.chatroom.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
@@ -10,11 +11,13 @@ import java.time.LocalDateTime;
 public class Message {
     @TableId(value = "message_id", type = IdType.AUTO)
     private Long messageId;
-    private Long chatGroupId;
-    private Long senderId;
+    private Integer groupId;
+    private Integer userId;
     private String messageContent;
-    private LocalDateTime messageTime;
     private MessageType messageType;
+
+    @TableField(exist = false)
+    private Integer onLineCount;
 
     public Message() {
     }
@@ -27,20 +30,20 @@ public class Message {
         this.messageId = messageId;
     }
 
-    public Long getChatGroupId() {
-        return chatGroupId;
+    public Integer getGroupId() {
+        return groupId;
     }
 
-    public void setChatGroupId(Long chatGroupId) {
-        this.chatGroupId = chatGroupId;
+    public void setGroupId(Integer chatGroupId) {
+        this.groupId = chatGroupId;
     }
 
-    public Long getSenderId() {
-        return senderId;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setSenderId(Long senderId) {
-        this.senderId = senderId;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public String getMessageContent() {
@@ -51,20 +54,20 @@ public class Message {
         this.messageContent = messageContent;
     }
 
-    public LocalDateTime getMessageTime() {
-        return messageTime;
-    }
-
-    public void setMessageTime(LocalDateTime messageTime) {
-        this.messageTime = messageTime;
-    }
-
     public MessageType getMessageType() {
         return messageType;
     }
 
     public void setMessageType(MessageType messageType) {
         this.messageType = messageType;
+    }
+
+    public Integer getOnLineCount() {
+        return onLineCount;
+    }
+
+    public void setOnLineCount(Integer onLineCount) {
+        this.onLineCount = onLineCount;
     }
 }
 

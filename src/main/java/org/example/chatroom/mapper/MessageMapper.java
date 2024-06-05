@@ -10,6 +10,6 @@ import java.util.List;
 @Mapper
 public interface MessageMapper extends BaseMapper<Message> {
 
-    @Select("SELECT * FROM chatmessage WHERE chat_group_id = #{groupId}")
+    @Select("SELECT * FROM chatmessage WHERE group_id = #{groupId}")
     List<Message> selectByGroupId(Long groupId);
 }

@@ -14,6 +14,7 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
     @Autowired
     private MessageMapper messageMapper;
 
+    //从数据库获取历史消息
     @Override
     public List<Message> getMessagesByGroupId(Long groupId){
         return messageMapper.selectByGroupId(groupId);
