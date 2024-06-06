@@ -33,23 +33,36 @@ public class WebSocketServiceImpl implements WebSocketService{
     // 处理收到的消息
     @Override
     public void onMessage(Integer groupId, Integer userId, String message) {
-        List<WebSocketSession> sessionList = groupMemberInfoMap.get(groupId);
-        Set<Integer> onlineUserList = onlineUserMap.get(groupId);
-        // json字符串转对象
-        Message msg = JSONObject.parseObject(message, Message.class);
-        msg.setOnLineCount(onlineUserList.size());
-        // json对象转字符串
-        String text = JSONObject.toJSONString(msg);
-        // 群组内广播消息
-        sessionList.forEach(item -> {
-            try {
-                item.sendMessage(new TextMessage(text));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-        //存入redis
-        redisService.addMessage(groupId,msg);
+//        List<WebSocketSession> sessionList = groupMemberInfoMap.get(groupId);
+//        Set<Integer> onlineUserList = onlineUserMap.get(groupId);
+
+        // 添加日志，打印传入的 message 字符串
+        System.out.println("Received message: " + message);
+
+        try {
+            // json字符串转对象
+            Message msg = JSONObject.parseObject(message, Message.class);
+//            msg.setOnLineCount(onlineUserList.size());
+
+            // json对象转字符串
+            String text = JSONObject.toJSONString(msg);
+
+//            // 群组内广播消息
+//            sessionList.forEach(item -> {
+//                try {
+//                    item.sendMessage(new TextMessage(text));
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            });
+
+            // 存入 redis
+            redisService.addMessage(groupId, msg);
+        } catch (Exception e) {
+            // 捕获并记录异常信息
+            e.printStackTrace();
+            System.out.println("Error parsing message: " + e.getMessage());
+        }
     }
 
     // 处理连接建立

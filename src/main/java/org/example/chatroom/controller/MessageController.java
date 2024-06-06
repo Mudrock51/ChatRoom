@@ -1,81 +1,55 @@
 package org.example.chatroom.controller;
 
-/*
-import jakarta.websocket.*;
-import jakarta.websocket.server.PathParam;
-import jakarta.websocket.server.ServerEndpoint;
-import lombok.extern.slf4j.Slf4j;
+import org.example.chatroom.dto.MessageDTO;
 import org.example.chatroom.entity.Message;
-import org.example.chatroom.service.ChatMessageService;
+import org.example.chatroom.entity.MessageType;
 import org.example.chatroom.service.MessageService;
+import org.example.chatroom.service.WebSocketService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.stereotype.Component;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
-@Slf4j
-@ServerEndpoint("/api/chat/{groupId}/{userId}")
-@Component
+@RestController
+@RequestMapping("/api/chat/{userId}")
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class MessageController {
 
     @Autowired
     private MessageService messageService;
 
     @Autowired
-    private ChatMessageService chatMessageService;
+    private WebSocketService webSocketService;
 
+    @GetMapping("/{groupId}/message")
+    public ResponseEntity<List<Message>> getGroupMessages(@PathVariable String groupId) {
+        List<Message> messages = messageService.getMessagesByGroupId(Integer.parseInt((groupId)));
+        return ResponseEntity.ok(messages);
+    }
 
-    //将收到的消息存入了Redis中
     @PostMapping("/send")
-    public String sendMessage(@RequestBody Message message) throws IOException {
-        message.setMessageTime(LocalDateTime.now());
-        chatMessageService.addMessage(message.getChatGroupId(), message);
-        //Trigger WebSocket message forwarding
-        return "Message sent and cached to Redis.";
+    public ResponseEntity<Message> sendMessage(@RequestBody Map<String, String> request){
+
+        Message message = new Message();
+        message.setMessageContent(request.get("content"));
+        message.setUserId(Integer.valueOf(request.get("userId")));
+        message.setGroupId(Integer.valueOf(request.get("groupId")));
+
+        System.out.println("Debug GroupId:" + message.getGroupId());
+        System.out.println("Debug UserId:" + message.getUserId());
+        System.out.println("Debug MessageContent:" + message.getMessageContent());
+
+        messageService.saveMessage(message);
+
+        // 消息转发
+//        webSocketService.onMessage(
+//                message.getGroupId(),
+//                message.getUserId(),
+//                "{ \"message\":\"" + message.getMessageContent() + "\" }"
+//        );
+
+        return ResponseEntity.ok(message);
     }
-
-    @OnMessage
-    public void onMessage(@PathParam("groupId") Integer groupId,@PathParam("userId") Integer userId,String msg) throws IOException {
-        messageService.handleMessage(groupId,userId,msg);
-    }
-
-    @OnOpen
-    public void onOpen(Session session, @PathParam("groupId") Integer groupId, @PathParam("userId") Integer userId) throws IOException {
-        messageService.addMemberToGroup(session, groupId, userId);
-    }
-
-    @OnClose
-    public void onClose(Session session, @PathParam("groupId") Integer groupId, @PathParam("userId") Integer userId) throws IOException {
-        messageService.removeMemberFromGroup(session, groupId, userId);
-    }
-
-    @OnError
-    public void onError(Session session,Throwable error){
-        error.printStackTrace();
-    }
-
-    */
-/*@PostMapping("/send")
-    public String sendMessage(@RequestBody Message message) {
-        message.setMessageTime(LocalDateTime.now());
-        messageService.save(message);
-        return "Message sent and saved to database.";
-    }*//*
-
-
-
-    @GetMapping("/receive/{id}")
-    public Message receiveMessage(@PathVariable Long id) {
-        return messageService.getById(id);
-    }
-
-    // 获取某个聊天组的历史消息
-    @GetMapping("/{groupId}")
-    public List<Message> getMessagesByGroupId(@PathVariable Long groupId) {
-        return messageService.getMessagesByGroupId(groupId);
-    }
-}*/
+}

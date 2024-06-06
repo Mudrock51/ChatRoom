@@ -5,28 +5,24 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
-import java.time.LocalDateTime;
-
 @TableName("chatmessage")
 public class Message {
     @TableId(value = "message_id", type = IdType.AUTO)
-    private Long messageId;
+    private int messageId;
     private Integer groupId;
     private Integer userId;
     private String messageContent;
-    private MessageType messageType;
 
     @TableField(exist = false)
     private Integer onLineCount;
 
-    public Message() {
-    }
+    public Message(){}
 
-    public Long getMessageId() {
+    public int getMessageId() {
         return messageId;
     }
 
-    public void setMessageId(Long messageId) {
+    public void setMessageId(int  messageId) {
         this.messageId = messageId;
     }
 
@@ -54,14 +50,6 @@ public class Message {
         this.messageContent = messageContent;
     }
 
-    public MessageType getMessageType() {
-        return messageType;
-    }
-
-    public void setMessageType(MessageType messageType) {
-        this.messageType = messageType;
-    }
-
     public Integer getOnLineCount() {
         return onLineCount;
     }
@@ -69,5 +57,6 @@ public class Message {
     public void setOnLineCount(Integer onLineCount) {
         this.onLineCount = onLineCount;
     }
+
 }
 

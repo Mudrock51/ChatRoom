@@ -3,6 +3,7 @@ package org.example.chatroom.controller;
 import org.example.chatroom.service.WebSocketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -10,6 +11,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 
 @Component
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class WebSocketHandler extends TextWebSocketHandler {
 
     private final WebSocketService webSocketService;
@@ -22,8 +24,8 @@ public class WebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         // 从URL路径中获取groupId和userId
-        Integer groupId = getParameter(session, 3);
-        Integer userId = getParameter(session, 4);
+        Integer groupId = getParameter(session, 4);
+        Integer userId = getParameter(session, 3);
         // 调用服务层的onOpen方法
         webSocketService.onOpen(session, groupId, userId);
     }
@@ -31,8 +33,8 @@ public class WebSocketHandler extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         // 从URL路径中获取groupId和userId
-        Integer groupId = getParameter(session, 3);
-        Integer userId = getParameter(session, 4);
+        Integer groupId = getParameter(session, 4);
+        Integer userId = getParameter(session, 3);
         // 调用服务层的onMessage方法
         webSocketService.onMessage(groupId, userId, message.getPayload());
     }
@@ -40,8 +42,8 @@ public class WebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         // 从URL路径中获取sid和userId
-        Integer groupId = getParameter(session, 3);
-        Integer userId = getParameter(session, 4);
+        Integer groupId = getParameter(session, 4);
+        Integer userId = getParameter(session, 3);
         // 调用服务层的onClose方法
         webSocketService.onClose(session, groupId, userId);
     }

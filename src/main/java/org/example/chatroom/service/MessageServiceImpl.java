@@ -14,9 +14,19 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
     @Autowired
     private MessageMapper messageMapper;
 
+
+    @Override
+    public void saveMessage(Message message) {
+        try {
+            messageMapper.insertMessage(message);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
     //从数据库获取历史消息
     @Override
-    public List<Message> getMessagesByGroupId(Long groupId){
+    public List<Message> getMessagesByGroupId(int groupId){
         return messageMapper.selectByGroupId(groupId);
     }
 }

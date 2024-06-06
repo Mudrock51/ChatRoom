@@ -13,7 +13,7 @@ import static com.baomidou.mybatisplus.annotation.IdType.AUTO;
 public class User {
 
     @TableId(value = "user_id", type = AUTO)
-    private Long userId;
+    private int userId;
 
     private String username;
     private String email;
@@ -52,11 +52,11 @@ public class User {
         }
     }
 
-    public Long getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
