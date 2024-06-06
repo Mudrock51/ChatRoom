@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -116,5 +117,32 @@ public class UserServiceImpl implements UserService {
         // 简单生成验证码的方法
         return String.valueOf((int) (Math.random() * 9000) + 1000);
     }
+
+    //获取所有用户信息
+    @Override
+    public List<User> getAllUsers() {
+        return userMapper.selectList(null);
+    }
+
+    @Override
+    public User getUserById(Long id) {
+        return userMapper.selectById(id);
+    }
+
+    @Override
+    public void addUser(User user) {
+        userMapper.insert(user);
+    }
+
+    @Override
+    public void updateUser(User user) {
+        userMapper.updateById(user);
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+        userMapper.deleteById(id);
+    }
+
 
 }

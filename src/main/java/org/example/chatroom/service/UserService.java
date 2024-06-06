@@ -1,7 +1,10 @@
 package org.example.chatroom.service;
 
 import org.example.chatroom.dto.UserDTO;
+import org.example.chatroom.entity.User;
 import org.springframework.http.ResponseEntity;
+
+import java.util.List;
 
 public interface UserService {
 
@@ -21,6 +24,16 @@ public interface UserService {
 
     ResponseEntity<?> handleVerifyCode(String email, String code);
 
-    // 乱七八糟
+    List<User> getAllUsers();
+
+    User getUserById(Long id);
+
     String generateVerificationCode();
+
+    void addUser(User user);
+
+    void updateUser(User user);
+
+    void deleteUser(Long id);
+
 }
