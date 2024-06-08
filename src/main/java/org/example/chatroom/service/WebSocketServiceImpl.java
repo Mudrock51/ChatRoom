@@ -1,5 +1,6 @@
 package org.example.chatroom.service;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.example.chatroom.entity.Message;
 import org.example.chatroom.entity.User;
@@ -26,38 +27,46 @@ public class WebSocketServiceImpl implements WebSocketService{
     private RedisService redisService;
 
     // 房间号 -> 组成员信息
-    private static ConcurrentHashMap<Integer, List<WebSocketSession>> groupMemberInfoMap = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Integer, List<WebSocketSession>> groupMemberInfoMap = new ConcurrentHashMap<>();
     // 房间号 -> 在线人数
-    private static ConcurrentHashMap<Integer, Set<Integer>> onlineUserMap = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Integer, Set<Integer>> onlineUserMap = new ConcurrentHashMap<>();
 
     // 处理收到的消息
     @Override
     public void onMessage(Integer groupId, Integer userId, String message) {
-//        List<WebSocketSession> sessionList = groupMemberInfoMap.get(groupId);
-//        Set<Integer> onlineUserList = onlineUserMap.get(groupId);
+        List<WebSocketSession> sessionList = groupMemberInfoMap.get(groupId);
+        Set<Integer> onlineUserList = onlineUserMap.get(groupId);
+
+        // 从 message 中获取 content, Redis缓存的内容和数据库持久化的内容
+        JSONObject jsonObject = JSON.parseObject(message);
+        String content = jsonObject.getString("content");
 
         // 添加日志，打印传入的 message 字符串
-        System.out.println("Received message: " + message);
+        System.out.println("***\n" + "Received message: " + message + "\n***");
+        System.out.println("***\n" + "Divide the content is: " + content + "\n***");
 
         try {
-            // json字符串转对象
-            Message msg = JSONObject.parseObject(message, Message.class);
-//            msg.setOnLineCount(onlineUserList.size());
+            // json字符串转Message对象
+            Message msg = new Message();
+            msg.setGroupId(groupId);
+            msg.setUserId(userId);
+            msg.setMessageContent(content);
+            msg.setOnLineCount(onlineUserList.size());
+            msg.setType("message");
 
-            // json对象转字符串
-            String text = JSONObject.toJSONString(msg);
-
-//            // 群组内广播消息
-//            sessionList.forEach(item -> {
-//                try {
-//                    item.sendMessage(new TextMessage(text));
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            });
+            // 群组内广播消息
+            sessionList.forEach(item -> {
+                try {
+                    // 这里广播的是Json格式String的消息内容
+                    item.sendMessage(new TextMessage(message));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
 
             // 存入 redis
             redisService.addMessage(groupId, msg);
+
         } catch (Exception e) {
             // 捕获并记录异常信息
             e.printStackTrace();
@@ -98,12 +107,15 @@ public class WebSocketServiceImpl implements WebSocketService{
     private void sendInfo(Integer groupId, Integer userId, Integer onlineSum, String info) {
         // 获取当前用户信息
         User currentUser = userMapper.selectById(userId);
+
         // 构建消息对象
         Message msg = new Message();
         msg.setGroupId(groupId);
         msg.setOnLineCount(onlineSum);
         msg.setUserId(userId);
         msg.setMessageContent(currentUser.getUsername() + info);
+        msg.setType("status");
+
 
         List<WebSocketSession> sessionList = groupMemberInfoMap.get(groupId);
         Set<Integer> onlineUserList = onlineUserMap.get(groupId);

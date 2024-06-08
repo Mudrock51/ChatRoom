@@ -34,21 +34,14 @@ public class MessageController {
 
         Message message = new Message();
         message.setMessageContent(request.get("content"));
-        message.setUserId(Integer.valueOf(request.get("userId")));
-        message.setGroupId(Integer.valueOf(request.get("groupId")));
+        message.setUserId(Integer.parseInt(request.get("userId")));
+        message.setGroupId(Integer.parseInt(request.get("groupId")));
 
         System.out.println("Debug GroupId:" + message.getGroupId());
         System.out.println("Debug UserId:" + message.getUserId());
         System.out.println("Debug MessageContent:" + message.getMessageContent());
 
         messageService.saveMessage(message);
-
-        // 消息转发
-//        webSocketService.onMessage(
-//                message.getGroupId(),
-//                message.getUserId(),
-//                "{ \"message\":\"" + message.getMessageContent() + "\" }"
-//        );
 
         return ResponseEntity.ok(message);
     }

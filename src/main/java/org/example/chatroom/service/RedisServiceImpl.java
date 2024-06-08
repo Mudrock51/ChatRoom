@@ -48,9 +48,7 @@ public class RedisServiceImpl implements RedisService {
      */
     @Async
     public void saveMessageAsync(Message message) {
-        System.out.println("Debug message: " + message.getMessageId());
-        System.out.println("Debug message: " + message.getMessageContent());
-        System.out.println("Debug message: " + message.getUserId());
+        //TODO 这里消息消失了
         messageService.saveMessage(message);
     }
 
