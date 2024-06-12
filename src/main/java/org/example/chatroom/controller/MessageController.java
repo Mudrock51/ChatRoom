@@ -2,7 +2,6 @@ package org.example.chatroom.controller;
 
 import org.example.chatroom.entity.Message;
 import org.example.chatroom.service.MessageService;
-import org.example.chatroom.service.WebSocketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,17 +17,17 @@ public class MessageController {
     @Autowired
     private MessageService messageService;
 
-    @Autowired
-    private WebSocketService webSocketService;
-
-    @GetMapping("/{groupId}/message")
+    // 获取群组聊天历史记录
+    @GetMapping("/{userId}/{groupId}/message")
     public ResponseEntity<List<Message>> getGroupMessages(@PathVariable String groupId) {
         List<Message> messages = messageService.getMessagesByGroupId(Integer.parseInt((groupId)));
         return ResponseEntity.ok(messages);
     }
 
-    @PostMapping("/send")
-    public ResponseEntity<Message> sendMessage(@RequestBody Map<String, String> request) {
+    // 发送群组信息、本地存储
+    @PostMapping("/{userId}/{groupId}/send")
+    public ResponseEntity<Message> sendMessage(@RequestBody Map<String, String> request){
+
         Message message = new Message();
         message.setMessageContent(request.get("content"));
         message.setUserId(Integer.parseInt(request.get("userId")));

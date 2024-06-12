@@ -26,7 +26,7 @@ public interface UserService {
 
     List<User> getAllUsers();
 
-    User getUserById(Long id);
+    User getUserById(int id);
 
     String generateVerificationCode();
 
@@ -34,6 +34,6 @@ public interface UserService {
 
     void updateUser(User user);
 
-    void deleteUser(Long id);
+    void deleteUser(int id);
 
 }

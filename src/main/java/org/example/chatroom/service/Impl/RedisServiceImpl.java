@@ -1,6 +1,8 @@
-package org.example.chatroom.service;
+package org.example.chatroom.service.Impl;
 
 import org.example.chatroom.entity.Message;
+import org.example.chatroom.service.MessageService;
+import org.example.chatroom.service.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Async;

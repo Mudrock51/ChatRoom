@@ -1,10 +1,11 @@
-package org.example.chatroom.service;
+package org.example.chatroom.service.Impl;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import org.example.chatroom.convert.UserConverter;
 import org.example.chatroom.dto.UserDTO;
 import org.example.chatroom.entity.User;
 import org.example.chatroom.mapper.UserMapper;
+import org.example.chatroom.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -125,7 +126,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserById(Long id) {
+    public User getUserById(int id) {
         return userMapper.selectById(id);
     }
 
@@ -140,7 +141,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(Long id) {
+    public void deleteUser(int id) {
         userMapper.deleteById(id);
     }
 

@@ -1,10 +1,12 @@
-package org.example.chatroom.service;
+package org.example.chatroom.service.Impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.example.chatroom.entity.Message;
 import org.example.chatroom.entity.User;
 import org.example.chatroom.mapper.UserMapper;
+import org.example.chatroom.service.RedisService;
+import org.example.chatroom.service.WebSocketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
@@ -18,7 +20,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
-public class WebSocketServiceImpl implements WebSocketService{
+public class WebSocketServiceImpl implements WebSocketService {
 
     @Autowired
     private UserMapper userMapper;
