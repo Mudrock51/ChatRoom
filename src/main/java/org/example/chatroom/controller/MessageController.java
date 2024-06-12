@@ -1,8 +1,6 @@
 package org.example.chatroom.controller;
 
-import org.example.chatroom.dto.MessageDTO;
 import org.example.chatroom.entity.Message;
-import org.example.chatroom.entity.MessageType;
 import org.example.chatroom.service.MessageService;
 import org.example.chatroom.service.WebSocketService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/chat/{userId}")
+@RequestMapping("/api/chat")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class MessageController {
 
@@ -30,8 +28,7 @@ public class MessageController {
     }
 
     @PostMapping("/send")
-    public ResponseEntity<Message> sendMessage(@RequestBody Map<String, String> request){
-
+    public ResponseEntity<Message> sendMessage(@RequestBody Map<String, String> request) {
         Message message = new Message();
         message.setMessageContent(request.get("content"));
         message.setUserId(Integer.parseInt(request.get("userId")));
@@ -44,5 +41,23 @@ public class MessageController {
         messageService.saveMessage(message);
 
         return ResponseEntity.ok(message);
+    }
+
+    // 新增方法：获取所有消息
+    @GetMapping("/all")
+    public ResponseEntity<List<Message>> getAllMessages() {
+        List<Message> messages = messageService.getAllMessages();
+        return ResponseEntity.ok(messages);
+    }
+
+    // 新增方法：删除消息
+    @DeleteMapping("/{messageId}")
+    public ResponseEntity<Void> deleteMessage(@PathVariable int messageId) {
+        boolean success = messageService.deleteMessageById(messageId);
+        if (success) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.status(500).build();
+        }
     }
 }

@@ -14,7 +14,6 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
     @Autowired
     private MessageMapper messageMapper;
 
-
     @Override
     public void saveMessage(Message message) {
         try {
@@ -24,9 +23,27 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
         }
     }
 
-    //从数据库获取历史消息
+    // 从数据库获取历史消息
     @Override
     public List<Message> getMessagesByGroupId(int groupId){
         return messageMapper.selectByGroupId(groupId);
+    }
+
+    // 新增方法：获取所有消息
+    @Override
+    public List<Message> getAllMessages(){
+        return messageMapper.selectAllMessages();
+    }
+
+    // 新增方法：删除消息
+    @Override
+    public boolean deleteMessageById(int messageId) {
+        try {
+            int result = messageMapper.deleteMessageById(messageId);
+            return result > 0;
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
     }
 }
